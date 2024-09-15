@@ -1,32 +1,38 @@
 import React from 'react';
 import { ChatO, FriendsO, ManagerO, PhotoO } from '@react-vant/icons';
-
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
+  useLocation,
+  useNavigate,
 } from 'react-router-dom';
 import routes from '@/routes';
 import { Tabbar } from 'react-vant';
 
 function App() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   return (
-    <Router>
-      <div className='flex flex-col min-h-screen min-w-screen'>
-        <div className='flex-1'>
-          <Routes>
-            {routes.map((route) => (
-              <Route
-                key={route.path}
-                path={route.path}
-                element={route.element}
-              />
-            ))}
-            <Route path='/' element={<Navigate to='/chat' replace />} />
-          </Routes>
-        </div>
-        <Tabbar>
+    <div className='flex flex-col h-screen'>
+      {/* 主要内容区域 */}
+      <main className='flex-1 overflow-y-auto mt-12 mb-16'>
+        <Routes>
+          {routes.map((route) => (
+            <Route key={route.path} path={route.path} element={route.element} />
+          ))}
+          <Route path='/' element={<Navigate to='/chat' replace />} />
+        </Routes>
+      </main>
+
+      {/* 底部导航栏 */}
+      <footer className='fixed bottom-0 left-0 right-0 bg-white z-10'>
+        <Tabbar
+          value={location.pathname}
+          onChange={(value) => navigate(value as string)}
+        >
           <Tabbar.Item icon={<ChatO />} name='/chat'>
             聊天
           </Tabbar.Item>
@@ -40,9 +46,17 @@ function App() {
             我
           </Tabbar.Item>
         </Tabbar>
-      </div>
+      </footer>
+    </div>
+  );
+}
+
+function AppWrapper() {
+  return (
+    <Router>
+      <App />
     </Router>
   );
 }
 
-export default App;
+export default AppWrapper;

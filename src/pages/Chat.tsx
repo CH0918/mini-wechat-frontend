@@ -1,69 +1,104 @@
-import React, { useState } from 'react';
-import { Button, Input } from 'react-vant';
+import ChatRecordComp from '@/component/ChatRecordComp';
+import Header from '@/component/HeadComp';
+import { formatChatTime } from '@/utils/tool';
+import { AddO } from '@react-vant/icons';
+// import { AddO } from '@react-vant/icons';
+import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
 
-interface Message {
-  id: number;
-  text: string;
-  isSent: boolean;
+interface ChatRecord {
+  avatar: string;
+  name: string;
+  lastMessage: string;
+  time: number;
 }
 
 const Chat: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputText, setInputText] = useState('');
+  const [chatRecords, setChatRecords] = useState<ChatRecord[]>([]);
 
-  const handleSend = () => {
-    if (inputText.trim()) {
-      const newMessage: Message = {
-        id: Date.now(),
-        text: inputText,
-        isSent: true,
-      };
-      setMessages([...messages, newMessage]);
-      setInputText('');
-    }
-  };
+  useEffect(() => {
+    const fetchChatRecords = async () => {
+      try {
+        // const response = await axios.get<ChatRecord[]>('/api/chat-records');
+        // 模拟一批聊天记录数据
+        const mockChatRecords: ChatRecord[] = [
+          {
+            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=张三',
+            name: '张三',
+            lastMessage: '你好，最近怎么样？',
+            time: Date.now(), // mock时间戳
+          },
+          {
+            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=李四',
+            name: '李四',
+            lastMessage: '周末一起出去玩吗？',
+            time: Date.now() - 1000 * 60 * 60 * 24, // 昨天时间戳
+          },
+          {
+            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=王五',
+            name: '王五',
+            lastMessage: '记得带上文件哦',
+            time: Date.now() - 1000 * 60 * 60 * 24 * 3, // 星期二时间戳
+          },
+          {
+            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=王五',
+            name: '王五',
+            lastMessage: '记得带上文件哦',
+            time: Date.now() - 1000 * 60 * 60 * 24 * 3, // 星期二时间戳
+          },
+          {
+            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=王五',
+            name: '王五',
+            lastMessage: '记得带上文件哦',
+            time: Date.now() - 1000 * 60 * 60 * 24 * 3, // 星期二时间戳
+          },
+          {
+            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=王五',
+            name: '王五',
+            lastMessage: '记得带上文件哦',
+            time: Date.now() - 1000 * 60 * 60 * 24 * 3, // 星期二时间戳
+          },
+          {
+            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=王五',
+            name: '王五',
+            lastMessage: '记得带上文件哦',
+            time: Date.now() - 1000 * 60 * 60 * 24 * 3, // 星期二时间戳
+          },
+          {
+            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=王五',
+            name: '王五',
+            lastMessage: '记得带上文件哦',
+            time: Date.now() - 1000 * 60 * 60 * 24 * 3, // 星期二时间戳
+          },
+          {
+            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=王五',
+            name: '王五',
+            lastMessage: '记得带上文件哦',
+            time: Date.now() - 1000 * 60 * 60 * 24 * 3, // 星期二时间戳
+          },
+        ];
+        const response = { data: mockChatRecords };
+        setChatRecords(response.data);
+      } catch (error) {
+        console.error('获取聊天记录失败:', error);
+      }
+    };
+
+    fetchChatRecords();
+  }, []);
 
   return (
-    <div className='flex flex-col h-screen bg-gray-100'>
-      {/* 顶部导航栏 */}
-      <div className=' text-black p-4'>
-        <h1 className='text-md text-center font-500'>微信</h1>
-      </div>
-
-      {/* 聊天消息区域 */}
-      <div className='flex-1 overflow-y-auto p-4'>
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex ${
-              message.isSent ? 'justify-end' : 'justify-start'
-            } mb-4`}
-          >
-            <div
-              className={`max-w-xs p-3 rounded-lg ${
-                message.isSent
-                  ? 'bg-green-500 text-white'
-                  : 'bg-white text-gray-800'
-              }`}
-            >
-              {message.text}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* 底部输入框 */}
-      <div className='bg-white p-4 flex items-center'>
-        <Input
-          className='flex-1 mr-2'
-          value={inputText}
-          onChange={setInputText}
-          placeholder='输入消息...'
+    <div className='flex flex-col pb-10'>
+      <Header title='微信' rightIcon={<AddO className='text-xl' />} />
+      {chatRecords.map((record, index) => (
+        <ChatRecordComp
+          key={index}
+          avatar={record.avatar}
+          name={record.name}
+          lastMessage={record.lastMessage}
+          time={formatChatTime(record.time)}
         />
-        <Button type='primary' onClick={handleSend}>
-          发送
-        </Button>
-      </div>
+      ))}
     </div>
   );
 };
