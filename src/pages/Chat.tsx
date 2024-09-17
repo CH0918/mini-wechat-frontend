@@ -1,12 +1,14 @@
 import ChatRecordComp from '@/component/ChatRecordComp';
+import FooterComp from '@/component/FooterComp';
 import Header from '@/component/HeadComp';
 import { formatChatTime } from '@/utils/tool';
 import { AddO } from '@react-vant/icons';
 // import { AddO } from '@react-vant/icons';
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 // import axios from 'axios';
 
-interface ChatRecord {
+export interface ChatRecord {
   avatar: string;
   name: string;
   lastMessage: string;
@@ -15,7 +17,7 @@ interface ChatRecord {
 
 const Chat: React.FC = () => {
   const [chatRecords, setChatRecords] = useState<ChatRecord[]>([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchChatRecords = async () => {
       try {
@@ -72,7 +74,7 @@ const Chat: React.FC = () => {
           },
           {
             avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=王五',
-            name: '王五',
+            name: '王五11',
             lastMessage: '记得带上文件哦',
             time: Date.now() - 1000 * 60 * 60 * 24 * 3, // 星期二时间戳
           },
@@ -92,6 +94,12 @@ const Chat: React.FC = () => {
       <Header title='微信' rightIcon={<AddO className='text-xl' />} />
       {chatRecords.map((record, index) => (
         <ChatRecordComp
+          onClick={() => {
+            // 路由跳转
+            navigate(`/chat/message`, {
+              state: record,
+            });
+          }}
           key={index}
           avatar={record.avatar}
           name={record.name}
@@ -99,6 +107,7 @@ const Chat: React.FC = () => {
           time={formatChatTime(record.time)}
         />
       ))}
+      <FooterComp />
     </div>
   );
 };

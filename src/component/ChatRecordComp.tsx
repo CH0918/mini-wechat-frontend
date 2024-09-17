@@ -5,6 +5,7 @@ interface ChatRecordProps {
   name: string;
   lastMessage: string;
   time: string;
+  onClick: () => void;
 }
 
 const ChatRecordComp: React.FC<ChatRecordProps> = ({
@@ -12,9 +13,13 @@ const ChatRecordComp: React.FC<ChatRecordProps> = ({
   name,
   lastMessage,
   time,
+  onClick,
 }) => {
   return (
-    <div className='flex items-center p-2 border-b border-gray-200'>
+    <div
+      className='flex items-center p-2 border-b border-gray-200'
+      onClick={onClick}
+    >
       <img src={avatar} alt={name} className='w-12 h-12 rounded-full mr-4' />
       <div className='flex-1'>
         <div className='flex justify-between items-center'>
